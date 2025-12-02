@@ -1,0 +1,485 @@
+{
+  "name": "RAG Sue Social",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1b5FchJZrQ7Mc7FOHmEtE1A-3hTx96Nwv",
+          "mode": "list",
+          "cachedResultName": "RAG sue social ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1b5FchJZrQ7Mc7FOHmEtE1A-3hTx96Nwv"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9e759093-424d-4acf-b216-225fe7341c8b",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tCHnJg3GPIy6ehB0",
+          "name": "RAG Drive Sue social"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "53689801-0d7e-47c8-adda-bf32b241d3a5",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tCHnJg3GPIy6ehB0",
+          "name": "RAG Drive Sue social"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "d4baa8e3-9511-4361-9057-c77daa9a77c2",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "j5EG5E6OZgJvQZjB",
+          "name": "Rag sue social"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        192
+      ],
+      "id": "16a2fa1a-5b2e-4538-ac21-e4505955b1e8",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "I4lQcsj8IOZMKiOC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        560,
+        208
+      ],
+      "id": "490e8f9d-948e-4c32-b0dd-799959f8ea8d",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=Overview :\n\nYou are an helpfull ai assistant who gets data form the vector data base which has some resumes you help hr as thre is lot of resume you help the hr to select the resume \n\ntools : vector data base \n\nrules : only give infromation based on data in vector tools "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        992,
+        -32
+      ],
+      "id": "47c88641-3f01-4a2e-84e5-f6a8e2c05d4e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        768,
+        16
+      ],
+      "id": "b6f396fd-c6ca-439a-8f4c-22c9b88c19f1",
+      "name": "When chat message received",
+      "webhookId": "3b5d5f68-0b84-4c8c-9d72-7c15fc431f2d"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        224
+      ],
+      "id": "a175422d-5d9f-40b4-9938-75d7631645fe",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "I4lQcsj8IOZMKiOC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        208
+      ],
+      "id": "100c3d95-9990-402b-8f95-04024973e056",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        304
+      ],
+      "id": "b7ac8c3b-a9ff-49f4-a991-45c877372564",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "I4lQcsj8IOZMKiOC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Work with data from database vector data base",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1280,
+        176
+      ],
+      "id": "6f589782-4fcf-43ea-ac13-f645897fa6f8",
+      "name": "Vector data base",
+      "credentials": {
+        "supabaseApi": {
+          "id": "j5EG5E6OZgJvQZjB",
+          "name": "Rag sue social"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Google Drive Trigger": [
+      {
+        "json": {
+          "parents": [
+            "1b5FchJZrQ7Mc7FOHmEtE1A-3hTx96Nwv"
+          ],
+          "lastModifyingUser": {
+            "displayName": "bomick kuruppalath",
+            "kind": "drive#user",
+            "me": true,
+            "permissionId": "02387435992305919512",
+            "emailAddress": "bomickkuruppalath@gmail.com",
+            "photoLink": "https://lh3.googleusercontent.com/a/ACg8ocL8M3PEk6v5LWjwzkzcLG1ymUqxaLXKiBR0i-17hs1jc8EGPg=s64"
+          },
+          "owners": [
+            {
+              "displayName": "bomick kuruppalath",
+              "kind": "drive#user",
+              "me": true,
+              "permissionId": "02387435992305919512",
+              "emailAddress": "bomickkuruppalath@gmail.com",
+              "photoLink": "https://lh3.googleusercontent.com/a/ACg8ocL8M3PEk6v5LWjwzkzcLG1ymUqxaLXKiBR0i-17hs1jc8EGPg=s64"
+            }
+          ],
+          "permissions": [
+            {
+              "kind": "drive#permission",
+              "id": "02387435992305919512",
+              "type": "user",
+              "emailAddress": "bomickkuruppalath@gmail.com",
+              "role": "owner",
+              "displayName": "bomick kuruppalath",
+              "photoLink": "https://lh3.googleusercontent.com/a/ACg8ocL8M3PEk6v5LWjwzkzcLG1ymUqxaLXKiBR0i-17hs1jc8EGPg=s64",
+              "deleted": false,
+              "pendingOwner": false
+            }
+          ],
+          "spaces": [
+            "drive"
+          ],
+          "capabilities": {
+            "canAcceptOwnership": false,
+            "canAddChildren": false,
+            "canAddMyDriveParent": false,
+            "canChangeCopyRequiresWriterPermission": true,
+            "canChangeItemDownloadRestriction": true,
+            "canChangeSecurityUpdateEnabled": false,
+            "canChangeViewersCanCopyContent": true,
+            "canComment": true,
+            "canCopy": true,
+            "canDelete": true,
+            "canDisableInheritedPermissions": false,
+            "canDownload": true,
+            "canEdit": true,
+            "canEnableInheritedPermissions": true,
+            "canListChildren": false,
+            "canModifyContent": true,
+            "canModifyContentRestriction": true,
+            "canModifyEditorContentRestriction": true,
+            "canModifyOwnerContentRestriction": true,
+            "canModifyLabels": false,
+            "canMoveChildrenWithinDrive": false,
+            "canMoveItemIntoTeamDrive": true,
+            "canMoveItemOutOfDrive": true,
+            "canMoveItemWithinDrive": true,
+            "canReadLabels": false,
+            "canReadRevisions": true,
+            "canRemoveChildren": false,
+            "canRemoveContentRestriction": false,
+            "canRemoveMyDriveParent": true,
+            "canRename": true,
+            "canShare": true,
+            "canTrash": true,
+            "canUntrash": true
+          },
+          "permissionIds": [
+            "02387435992305919512"
+          ],
+          "linkShareMetadata": {
+            "securityUpdateEligible": false,
+            "securityUpdateEnabled": true
+          },
+          "downloadRestrictions": {
+            "itemDownloadRestriction": {
+              "restrictedForReaders": false,
+              "restrictedForWriters": false
+            },
+            "effectiveDownloadRestrictionWithContext": {
+              "restrictedForReaders": false,
+              "restrictedForWriters": false
+            }
+          },
+          "kind": "drive#file",
+          "id": "1dW47Da87ETyWhPHMiu-tHee2KIGwX2R-",
+          "name": "Sharoon-CV-FlowCV-Resume-20251119.pdf",
+          "mimeType": "application/pdf",
+          "starred": false,
+          "trashed": false,
+          "explicitlyTrashed": false,
+          "version": "3",
+          "webContentLink": "https://drive.google.com/uc?id=1dW47Da87ETyWhPHMiu-tHee2KIGwX2R-&export=download",
+          "webViewLink": "https://drive.google.com/file/d/1dW47Da87ETyWhPHMiu-tHee2KIGwX2R-/view?usp=drivesdk",
+          "iconLink": "https://drive-thirdparty.googleusercontent.com/16/type/application/pdf",
+          "hasThumbnail": true,
+          "thumbnailLink": "https://lh3.googleusercontent.com/drive-storage/AJQWtBNXkTUh_iDbapvE-W8vPwsYXjdK8VoAG7aTEJaRCshjEPTvM1ygezG_w76p94LWBsGjqMUoKBiFKr7iOhTtuZgBJ6feOHjiWXxsYTaFXoC8MQ=s220",
+          "thumbnailVersion": "1",
+          "viewedByMe": true,
+          "viewedByMeTime": "2025-12-01T04:49:52.249Z",
+          "createdTime": "2025-12-01T04:49:52.249Z",
+          "modifiedTime": "2025-11-19T15:41:43.000Z",
+          "modifiedByMeTime": "2025-11-19T15:41:43.000Z",
+          "modifiedByMe": true,
+          "shared": false,
+          "ownedByMe": true,
+          "viewersCanCopyContent": true,
+          "copyRequiresWriterPermission": false,
+          "writersCanShare": true,
+          "originalFilename": "Sharoon-CV-FlowCV-Resume-20251119.pdf",
+          "fullFileExtension": "pdf",
+          "fileExtension": "pdf",
+          "md5Checksum": "ee7553ce092378dd47e0835cf24d759a",
+          "sha1Checksum": "675bfcb37963551d7e14b18f4b08feddc6a43723",
+          "sha256Checksum": "5bc072e272c4df76ca97669e2a7ad98a78ecb21c829f9adda79fb7248a8d565e",
+          "size": "59830",
+          "quotaBytesUsed": "59830",
+          "headRevisionId": "0By4uoCizymz_TUFBVjFqUjY0NUl0SnBHTmJRdmp1UFVBMVA0PQ",
+          "isAppAuthorized": false,
+          "inheritedPermissionsDisabled": false
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Vector data base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector data base": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "581ed318-31a2-470d-ada6-e22edb87e7de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a92d82fdcb47a7fc4d684b0341b1e7118ca6e328ce427957222627ec31e54d21"
+  },
+  "id": "UKmRL30lh8cWcjF1",
+  "tags": []
+}
